@@ -1,5 +1,32 @@
-#include "EspSaveCrash.h"
+/*
+  This in an Arduino library to save exception details
+  and stack trace to flash in case of ESP8266 crash.
+  Please check repository below for details
 
+  Repository: https://github.com/krzychb/EspSaveCrash
+  File: EspSaveCrash.cpp
+  Revision: 1.0.0
+  Date: 14-Aug-2016
+  Author: krzychb at gazeta.pl
+
+  Copyright (c) 2016 Krzysztof Budzynski. All rights reserved.
+
+  This application is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+
+  This application is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+*/
+
+#include "EspSaveCrash.h"
 
 extern "C" void custom_crash_callback(struct rst_info * rst_info, uint32_t stack, uint32_t stack_end )
 {

@@ -1,4 +1,4 @@
-# EspSaveCrash
+# EspSaveCrash [![Build Status](https://travis-ci.org/krzychb/EspSaveCrash.svg?branch=master)](https://travis-ci.org/krzychb/EspSaveCrash)
 
 Save exception details and stack trace anytime and anywhere the ESP8266 crashes. Implement it in your sketch in two simple steps.
 
@@ -27,7 +27,7 @@ You will implement it in your sketch in two simple steps.
 * Any ESP8266 module programmed using [esp8266 / Arduino](https://github.com/esp8266/Arduino) core.
 
 
-## Functions
+## Functionality
 
 * Registers callback to automatically capture and save crash details
 * Captures several crashes to save them to ESP8266's flash
@@ -71,7 +71,7 @@ krzychb
 
 ## Credits
 
-* Preparation of this library has been inspired by issue [#1152](https://github.com/esp8266/Arduino/issues/1152) in [esp8266 / Arduono](https://github.com/esp8266/Arduino) repository.
+* Preparation of this library has been inspired by issue [#1152](https://github.com/esp8266/Arduino/issues/1152) in [esp8266 / Arduino](https://github.com/esp8266/Arduino) repository.
 * Development was possible thanks to [Ivan Grokhotkov](https://twitter.com/i_grr), who clarified how to register a crash callback and suggested to save crash information on flash. 
 * Actual implementation of library has been done thanks to [djoele](https://github.com/djoele) who provided first working code and suggested to convert it into general functionality.
 

@@ -1,3 +1,31 @@
+/*
+  Example application to show how to save crash information
+  to ESP8266's flash using EspSaveCrash library
+  Please check repository below for details
+
+  Repository: https://github.com/krzychb/EspSaveCrash
+  File: SimpleCrash.ino
+  Revision: 1.0.0
+  Date: 14-Aug-2016
+  Author: krzychb at gazeta.pl
+
+  Copyright (c) 2016 Krzysztof Budzynski. All rights reserved.
+
+  This application is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+
+  This application is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+*/
+
 #include "EspSaveCrash.h"
 
 void setup(void)
@@ -23,8 +51,7 @@ void loop(void)
     switch (inChar)
     {
       case '0':
-        Serial.println("Attempting to divide one by zero ...");
-        Serial.println(millis());
+        Serial.println("Attempting to divide by zero ...");
         int result;
         result = 1 / 0;
         Serial.print("Result = ");
