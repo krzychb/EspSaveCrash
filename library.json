@@ -1,0 +1,15 @@
+{
+    "name": "EspSaveCrash",
+    "keywords": "crash, exception, restart, software WDT, diagnostics",
+    "description": "Automatically saves exception details and stack trace to flash in case of ESP8266 crash.",
+    "repository":
+    {
+        "type": "git",
+        "url": "https://github.com/krzychb/EspSaveCrash.git"
+    },
+    "exclude": "extras",
+    "frameworks": "arduino",
+    "platforms": [
+        "espressif",
+    ]
+}
