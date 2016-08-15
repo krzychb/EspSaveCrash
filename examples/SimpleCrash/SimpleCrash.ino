@@ -5,7 +5,7 @@
 
   Repository: https://github.com/krzychb/EspSaveCrash
   File: SimpleCrash.ino
-  Revision: 1.0.0
+  Revision: 1.0.1
   Date: 14-Aug-2016
   Author: krzychb at gazeta.pl
 
@@ -36,7 +36,7 @@ void setup(void)
   SaveCrash.print();
 
   Serial.println();
-  Serial.println("Type a letter + <enter>");
+  Serial.println("Press a key + <enter>");
   Serial.println("0 : attempt to divide by zero");
   Serial.println("e : attempt to read through a pointer to no object");
   Serial.println("c : clear crash information");
@@ -52,8 +52,9 @@ void loop(void)
     {
       case '0':
         Serial.println("Attempting to divide by zero ...");
-        int result;
-        result = 1 / 0;
+        int result, zero;
+        zero = 0;
+        result = 1 / zero;
         Serial.print("Result = ");
         Serial.println(result);
         break;

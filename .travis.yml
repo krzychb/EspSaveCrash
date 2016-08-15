@@ -15,6 +15,8 @@ install:
   - arduino --pref "compiler.warning_level=all" --save-prefs
 script:
   - arduino --verify --board esp8266:esp8266:generic $PWD/examples/SimpleCrash/SimpleCrash.ino
+  - arduino --verify --board esp8266:esp8266:generic $PWD/examples/EspSaveCrashTester/EspSaveCrashTester.ino
+  - arduino --verify --board esp8266:esp8266:generic $PWD/examples/RemoteCrashCheck/RemoteCrashCheck.ino
 notifications:
   email:
     on_success: change

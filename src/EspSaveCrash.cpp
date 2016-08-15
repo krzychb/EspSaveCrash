@@ -5,8 +5,8 @@
 
   Repository: https://github.com/krzychb/EspSaveCrash
   File: EspSaveCrash.cpp
-  Revision: 1.0.0
-  Date: 14-Aug-2016
+  Revision: 1.0.1
+  Date: 15-Aug-2016
   Author: krzychb at gazeta.pl
 
   Copyright (c) 2016 Krzysztof Budzynski. All rights reserved.
@@ -28,6 +28,11 @@
 
 #include "EspSaveCrash.h"
 
+/**
+ * Save crash information in EEPROM
+ * This function is called automatically if ESP8266 suffers an exception
+ * It should be kept quick / consise to be able to execute before hardware wdt may kick in
+ */
 extern "C" void custom_crash_callback(struct rst_info * rst_info, uint32_t stack, uint32_t stack_end )
 {
 
@@ -97,9 +102,17 @@ extern "C" void custom_crash_callback(struct rst_info * rst_info, uint32_t stack
 }
 
 
+/**
+ * The class cunstructor that has nothing to initialise
+ */
 EspSaveCrash::EspSaveCrash(void) {}
 
 
+/**
+ * Clear crash information saved in EEPROM
+ * In fact only crash counter is cleared
+ * The crash data are not deleted
+ */
 void EspSaveCrash::clear(void)
 {
   // Note that 'EEPROM.begin' method is reserving a RAM buffer
@@ -111,7 +124,11 @@ void EspSaveCrash::clear(void)
 }
 
 
-void EspSaveCrash::print(void)
+/**
+ * Print out crash information that has been previusly saved in EEPROM
+ * @param outputDev Print&    Optional. Where to print: Serial, Serial, WiFiClient, etc.
+ */
+void EspSaveCrash::print(Print& outputDev)
 {
   // Note that 'EEPROM.begin' method is reserving a RAM buffer
   // The buffer size is SAVE_CRASH_EEPROM_OFFSET + SAVE_CRASH_SPACE_SIZE
@@ -120,20 +137,20 @@ void EspSaveCrash::print(void)
   byte crashCounter = EEPROM.read(SAVE_CRASH_EEPROM_OFFSET + SAVE_CRASH_COUNTER);
   if (crashCounter == 0)
   {
-    Serial.println("No any crashes saved");
+    outputDev.println("No any crashes saved");
     return;
   }
 
-  Serial.println("Crash information recovered from EEPROM");
+  outputDev.println("Crash information recovered from EEPROM");
   int16_t readFrom = SAVE_CRASH_EEPROM_OFFSET + SAVE_CRASH_DATA_SETS;
   for (byte k = 0; k < crashCounter; k++)
   {
     uint32_t crashTime;
     EEPROM.get(readFrom + SAVE_CRASH_CRASH_TIME, crashTime);
-    Serial.printf("Crash # %d at %d ms\n", k + 1, crashTime);
+    outputDev.printf("Crash # %d at %ld ms\n", k + 1, crashTime);
 
-    Serial.printf("Reason of restart: %d\n", EEPROM.read(readFrom + SAVE_CRASH_RESTART_REASON));
-    Serial.printf("Exception cause: %d\n", EEPROM.read(readFrom + SAVE_CRASH_EXCEPTION_CAUSE));
+    outputDev.printf("Reason of restart: %d\n", EEPROM.read(readFrom + SAVE_CRASH_RESTART_REASON));
+    outputDev.printf("Exception cause: %d\n", EEPROM.read(readFrom + SAVE_CRASH_EXCEPTION_CAUSE));
 
     uint32_t epc1, epc2, epc3, excvaddr, depc;
     EEPROM.get(readFrom + SAVE_CRASH_EPC1, epc1);
@@ -141,32 +158,32 @@ void EspSaveCrash::print(void)
     EEPROM.get(readFrom + SAVE_CRASH_EPC3, epc3);
     EEPROM.get(readFrom + SAVE_CRASH_EXCVADDR, excvaddr);
     EEPROM.get(readFrom + SAVE_CRASH_DEPC, depc);
-    Serial.printf("epc1=0x%08x epc2=0x%08x epc3=0x%08x excvaddr=0x%08x depc=0x%08x\n", epc1, epc2, epc3, excvaddr, depc);
+    outputDev.printf("epc1=0x%08x epc2=0x%08x epc3=0x%08x excvaddr=0x%08x depc=0x%08x\n", epc1, epc2, epc3, excvaddr, depc);
 
     uint32_t stackStart, stackEnd;
     EEPROM.get(readFrom + SAVE_CRASH_STACK_START, stackStart);
     EEPROM.get(readFrom + SAVE_CRASH_STACK_END, stackEnd);
-    Serial.println(">>>stack>>>");
+    outputDev.println(">>>stack>>>");
     int16_t currentAddress = readFrom + SAVE_CRASH_STACK_TRACE;
     int16_t stackLength = stackEnd - stackStart;
     uint32_t stackTrace;
     for (int16_t i = 0; i < stackLength; i += 0x10)
     {
-      Serial.printf("%08x: ", stackStart + i);
+      outputDev.printf("%08x: ", stackStart + i);
       for (byte j = 0; j < 4; j++)
       {
         EEPROM.get(currentAddress, stackTrace);
-        Serial.printf("%08x ", stackTrace);
+        outputDev.printf("%08x ", stackTrace);
         currentAddress += 4;
         if (currentAddress - SAVE_CRASH_EEPROM_OFFSET > SAVE_CRASH_SPACE_SIZE)
         {
-          Serial.println("\nIncomplete stack trace saved!");
+          outputDev.println("\nIncomplete stack trace saved!");
           break;
         }
       }
-      Serial.println();
+      outputDev.println();
     }
-    Serial.println("<<<stack<<<");
+    outputDev.println("<<<stack<<<");
     readFrom = readFrom + SAVE_CRASH_STACK_TRACE + stackLength;
   }
   int16_t writeFrom;
@@ -176,12 +193,24 @@ void EspSaveCrash::print(void)
   // is there free EEPROM space avialable to save data for next crash?
   if (writeFrom + SAVE_CRASH_STACK_TRACE > SAVE_CRASH_SPACE_SIZE)
   {
-    Serial.println("No more EEPROM space available to save crash information!");
+    outputDev.println("No more EEPROM space available to save crash information!");
   }
   else
   {
-    Serial.printf("EEPROM space available: 0x%04x bytes\n", SAVE_CRASH_SPACE_SIZE - writeFrom);
+    outputDev.printf("EEPROM space available: 0x%04x bytes\n", SAVE_CRASH_SPACE_SIZE - writeFrom);
   }
+}
+
+
+/**
+ * Get the count of crash data sets saved in EEPROM
+ */
+int EspSaveCrash::count()
+{
+  EEPROM.begin(SAVE_CRASH_EEPROM_OFFSET + SAVE_CRASH_SPACE_SIZE);
+  int crashCounter = EEPROM.read(SAVE_CRASH_EEPROM_OFFSET + SAVE_CRASH_COUNTER);
+  EEPROM.end();
+  return crashCounter;
 }
 
 
