@@ -1,5 +1,6 @@
 {
     "name": "EspSaveCrash",
+    "version": "1.0.1",
     "keywords": "crash, exception, restart, software WDT, diagnostics",
     "description": "Automatically saves exception details and stack trace to flash in case of ESP8266 crash.",
     "repository":
