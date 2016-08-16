@@ -12,10 +12,9 @@ install:
   - arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs
   - arduino --install-boards esp8266:esp8266
   - arduino --board esp8266:esp8266:generic --save-prefs
-  - arduino --pref "compiler.warning_level=all" --save-prefs
 script:
   - arduino --verify --board esp8266:esp8266:generic $PWD/examples/SimpleCrash/SimpleCrash.ino
-  - arduino --verify --board esp8266:esp8266:generic $PWD/examples/EspSaveCrashTester/EspSaveCrashTester.ino
+  - arduino --verify --board esp8266:esp8266:generic $PWD/examples/ExtendedCrashTester/ExtendedCrashTester.ino
   - arduino --verify --board esp8266:esp8266:generic $PWD/examples/RemoteCrashCheck/RemoteCrashCheck.ino
 notifications:
   email:

@@ -5,8 +5,8 @@
 
   Repository: https://github.com/krzychb/EspSaveCrash
   File: RemoteCrashCheck.ino
-  Revision: 1.0.0
-  Date: 15-Aug-2016
+  Revision: 1.0.1
+  Date: 16-Aug-2016
   Author: krzychb at gazeta.pl
 
   Copyright (c) 2016 Krzysztof Budzynski. All rights reserved.
@@ -41,6 +41,7 @@ void setup(void)
   Serial.println();
 
   Serial.printf("Connecting to %s ", ssid);
+  WiFi.persistent(false);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED)
   {
@@ -53,11 +54,15 @@ void setup(void)
 
   server.begin();
   Serial.printf("Web server started, open %s in a web browser\n", WiFi.localIP().toString().c_str());
+  Serial.println("\n? - help");
 }
 
 
+int* nullPointer = NULL;
+
 void loop(void)
 {
+  // respond to the web browser
   WiFiClient client = server.available();
   if (client)
   {
@@ -87,5 +92,84 @@ void loop(void)
     // close the connection:
     client.stop();
     Serial.println("[Client disonnected]");
+  }
+
+  // read the keyboard
+  if (Serial.available() > 0)
+  {
+    char inChar = Serial.read();
+    switch (inChar)
+    {
+      case ' ':
+        SaveCrash.print();
+        break;
+      case 'c':
+        SaveCrash.clear();
+        Serial.println("Crash information cleared");
+        break;
+      case 's':
+        Serial.printf("Crashing with software WDT (%ld ms) ...\n", millis());
+        while (true)
+        {
+          // stay in an infinite loop doing nothing
+          // this way other process can not be executed
+        }
+        break;
+      case 'r':
+        Serial.printf("Reset ESP (%ld ms) ...\n", millis());
+        ESP.reset();
+        break;
+      case 't':
+        Serial.printf("Restart ESP (%ld ms) ...\n", millis());
+        ESP.restart();
+        break;
+      case 'h':
+        Serial.printf("Crashing with hardware WDT (%ld ms) ...\n", millis());
+        ESP.wdtDisable();
+        while (true)
+        {
+          // stay in an infinite loop doing nothing
+          // this way other process can not be executed
+          //
+          // Note:
+          // Hardware wdt kicks in if software wdt is unable to perfrom
+          // Nothing will be saved in EEPROM for the hardware wdt
+        }
+        break;
+      case '0':
+        Serial.printf("Crashing with 'division by zero' exeption (%ld ms) ...\n", millis());
+        int result, zero;
+        zero = 0;
+        result = 1 / zero;
+        Serial.printf("Result = %d\n", result);
+        break;
+      case 'e':
+        Serial.printf("Crashing with 'read through a pointer to no object' exeption (%ld ms) ...\n", millis());
+        // null pointer dereference - read
+        // attempt to read a value through a null pointer
+        Serial.print(*nullPointer);
+        break;
+      case 'x':
+        Serial.printf("Crashing with 'write through a pointer to no object' exeption (%ld ms) ...\n", millis());
+        // null pointer dereference - write
+        // attempt to write a value through a null pointer
+        *nullPointer = 0;
+        break;
+      case '?':
+        Serial.println("Press a key + <enter>");
+        Serial.println("<space> : print crash information");
+        Serial.println("c : clear crash information");
+        Serial.println("r/t : reset / restart module");
+        Serial.println("? : print help");
+        Serial.println("Crash this application with");
+        Serial.println("s/h : software / harware WDT");
+        Serial.println("0 : 'division by zero' exeption");
+        Serial.println("e : 'read through a pointer to no object' exeption");
+        Serial.println("x : 'write through a pointer to no object' exeption");
+        break;
+      default:
+        Serial.printf("Case? (%c) / ? - help\n", inChar);
+        break;
+    }
   }
 }

@@ -4,9 +4,9 @@
   Please check repository below for details
 
   Repository: https://github.com/krzychb/EspSaveCrash
-  File: EspSaveCrashTester.ino
-  Revision: 1.0.0
-  Date: 15-Aug-2016
+  File: ExtendedCrashTester.ino
+  Revision: 1.0.1
+  Date: 16-Aug-2016
   Author: krzychb at gazeta.pl
 
   Copyright (c) 2016 Krzysztof Budzynski. All rights reserved.
@@ -33,7 +33,7 @@ void setup(void)
 {
   Serial.begin(115200);
   Serial.println();
-  Serial.println("EspSaveCrashTester.ino\n");
+  Serial.println("ExtendedCrashTester.ino\n");
 
   SaveCrash.print();
 
