@@ -189,7 +189,7 @@ Depending on the key pressed exceptions are triggered. For example, after pressi
 [ExtendedCrashTester](https://github.com/krzychb/EspSaveCrash/blob/master/examples/ExtendedCrashTester/ExtendedCrashTester.ino) is an extended version of [Simple Crash](#simple-crash) above. It provides additional functionality:
 
   * triggers 'write through a pointer to no object' exception
-  * actuates software and hardware WDT - [Watchdog Timer](https://en.wikipedia.org/wiki/Watchdog_timer)
+  * activates software and hardware WDT - [Watchdog Timer](https://en.wikipedia.org/wiki/Watchdog_timer)
   * allows to reset and restart module from the sketch
 
 It also provides more diagnostic information like printing out time in milliseconds when particular exception was triggered.
@@ -230,8 +230,13 @@ If you like to change flash memory space reserved for storing crash information 
 #define SAVE_CRASH_SPACE_SIZE       0x0200  // space reserved to store crash data
 ```
 
-You may have other applications already using EEPROM. With parameter `SAVE_CRASH_EEPROM_OFFSET` below you can allocation initial EEPROM space for the other applications. Optionally use for this purpose upper EEPROM space (i.e. above `SAVE_CRASH_EEPROM_OFFSET` + `SAVE_CRASH_SPACE_SIZE`).
+You may have other applications already using EEPROM. With parameter `SAVE_CRASH_EEPROM_OFFSET` below you can allocate initial EEPROM space for the other applications. Optionally use for this purpose upper EEPROM space (i.e. above `SAVE_CRASH_EEPROM_OFFSET` + `SAVE_CRASH_SPACE_SIZE`).
 
 ```cpp
 #define SAVE_CRASH_EEPROM_OFFSET    0x0010  // adjust it to reserve space to store other data in EEPROM
 ```
+
+Picture below shows relation between both configuration parameters and total available EEPROM space.
+
+![alt text](extras/eeprom-layout.png "EEPROM layout")
+
