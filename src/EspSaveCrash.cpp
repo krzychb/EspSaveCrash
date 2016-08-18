@@ -5,8 +5,8 @@
 
   Repository: https://github.com/krzychb/EspSaveCrash
   File: EspSaveCrash.cpp
-  Revision: 1.0.1
-  Date: 15-Aug-2016
+  Revision: 1.0.2
+  Date: 18-Aug-2016
   Author: krzychb at gazeta.pl
 
   Copyright (c) 2016 Krzysztof Budzynski. All rights reserved.
@@ -178,11 +178,12 @@ void EspSaveCrash::print(Print& outputDev)
         if (currentAddress - SAVE_CRASH_EEPROM_OFFSET > SAVE_CRASH_SPACE_SIZE)
         {
           outputDev.println("\nIncomplete stack trace saved!");
-          break;
+          goto eepromSpaceEnd;
         }
       }
       outputDev.println();
     }
+    eepromSpaceEnd:
     outputDev.println("<<<stack<<<");
     readFrom = readFrom + SAVE_CRASH_STACK_TRACE + stackLength;
   }
