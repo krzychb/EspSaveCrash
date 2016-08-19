@@ -5,8 +5,8 @@
 
   Repository: https://github.com/krzychb/EspSaveCrash
   File: SimpleCrash.ino
-  Revision: 1.0.1
-  Date: 14-Aug-2016
+  Revision: 1.0.2
+  Date: 19-Aug-2016
   Author: krzychb at gazeta.pl
 
   Copyright (c) 2016 Krzysztof Budzynski. All rights reserved.
@@ -40,6 +40,7 @@ void setup(void)
   Serial.println("0 : attempt to divide by zero");
   Serial.println("e : attempt to read through a pointer to no object");
   Serial.println("c : clear crash information");
+  Serial.println();
 }
 
 

@@ -9,7 +9,7 @@ Do you face random crashes of ESP8266? Do you have difficulty to capture diagnos
 
 EspSaveCrash is a handy little library that will keep automatically catching and saving crash information to ESP8266 module's flash in case it fails due to exception or software WDT. You will then be able to analyze the crash log and decode the stack trace using [ESP Exception Decoder](https://github.com/me-no-dev/EspExceptionDecoder).
 
-You will implement it in your sketch in two simple steps.
+You will implement it in your sketch in two simple steps:
 
 1. Include the library
   ```cpp
@@ -21,7 +21,13 @@ You will implement it in your sketch in two simple steps.
   SaveCrash.print();
   ```
 
-Check provided example sketch [SimpleCrash.ino](https://github.com/krzychb/EspSaveCrash/blob/master/examples/SimpleCrash/SimpleCrash.ino) to see how it works. To clear crash history from the flash use `SaveCrash.clear()`.
+To clear existing crash history from the flash use `SaveCrash.clear()`.
+
+Check section [Quick Start](quick-start.md) for sample implementation of this library and tracking down where the program crash happened. More code samples are available in section [Examples](examples.md), that also covers access to saved information remotely with a web browser.  
+
+| [![alt text](extras/thumb-quick-start.png "Quick Start")](quick-start.md) | [![alt text](extras/thumb-code-examples.png "Code Examples")](examples.md) |
+| :---: | :---: |
+| [Quick Start](quick-start.md) | [Code Examples](examples.md) |
 
 
 ## Compatibility
@@ -50,9 +56,9 @@ Example output of `SaveCrash.print()`:
 
 ## Examples
 
-Library comes with [examples](https://github.com/krzychb/EspSaveCrash/tree/master/examples) that let you trigger some exceptions and see how to visualize saved data. 
+Library comes with [example sketches](https://github.com/krzychb/EspSaveCrash/tree/master/examples) that let you trigger some exceptions and see how to visualize saved data. 
 
-Please check the separate [description how to use examples](examples.md) and what particular functionality they provide.
+Please check separate section [how to use example sketches](examples.md) and what particular functionality they provide.
 
 
 ## Tested With
@@ -68,6 +74,13 @@ Please check the separate [description how to use examples](examples.md) and wha
 * [Arduino IDE](https://www.arduino.cc/en/Main/Software) 1.6.9 portable version running on Windows 7 x64
 * [PlatformIO IDE](http://platformio.org/platformio-ide) 1.3.0 CLI 2.11.0 running on Windows 7 x64
 * [Visual Micro](http://www.visualmicro.com/) 1606.17.10 with Visual Studio Community 2015 running on Windows 7 x64
+
+
+## Installation
+
+* Arduino IDE - use [Library Manager](https://www.arduino.cc/en/Guide/Libraries#toc2) in Arduino IDE and search for *EspSaveCrash*.
+* PlatformIO IDE - use PlatformIO's [Library Manager](http://docs.platformio.org/en/stable/librarymanager/). In particular execute `pio lib install 376`.
+* Visual Micro - installation procedure is the same as for Arduino IDE above.
 
 
 ## Contribute
