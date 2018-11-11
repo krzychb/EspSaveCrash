@@ -16,7 +16,12 @@ You will implement it in your sketch in two simple steps:
   #include "EspSaveCrash.h"
   ```
 
-2. Print out saved crash details
+2. Declare object
+  ```cpp
+EspSaveCrash SaveCrash;
+```
+
+3. Print out saved crash details
   ```cpp
   SaveCrash.print();
   ```

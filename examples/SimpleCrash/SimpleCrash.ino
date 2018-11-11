@@ -28,6 +28,8 @@
 
 #include "EspSaveCrash.h"
 
+EspSaveCrash SaveCrash;
+
 void setup(void)
 {
   Serial.begin(115200);

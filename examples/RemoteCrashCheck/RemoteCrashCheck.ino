@@ -29,6 +29,8 @@
 #include "EspSaveCrash.h"
 #include <ESP8266WiFi.h>
 
+EspSaveCrash SaveCrash;
+
 const char* ssid = "********";
 const char* password = "********";
 
