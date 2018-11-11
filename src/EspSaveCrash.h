@@ -82,7 +82,6 @@ class EspSaveCrash
 {
   public:
     EspSaveCrash(uint16_t = 0x0010, uint16_t = 0x0200);
-    ~EspSaveCrash();
     void print(Print& outDevice = Serial);
     void clear();
     int count();
