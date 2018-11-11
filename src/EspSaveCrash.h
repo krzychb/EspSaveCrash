@@ -33,17 +33,6 @@
 #include "EEPROM.h"
 #include "user_interface.h"
 
-
-/**
- * User configuration of EEPROM layout
- *
- * Note that for using EEPROM we are also reserving a RAM buffer
- * The buffer size will be bigger by SAVE_CRASH_EEPROM_OFFSET than what we actually need
- * The space that we really need is defined by SAVE_CRASH_SPACE_SIZE
- */
-#define SAVE_CRASH_EEPROM_OFFSET    0x0010  // adjust it to reserve space to store other data in EEPROM
-#define SAVE_CRASH_SPACE_SIZE       0x0200  // space reserved to store crash data
-
 /**
  * Layout of crash data saved to EEPROM (flash)
  *
@@ -89,24 +78,27 @@
 #define SAVE_CRASH_STACK_TRACE      0x22  // variable
 
 
-class EspSaveCrash
+class EspSaveCrash 
 {
   public:
-    EspSaveCrash();
+    EspSaveCrash(uint16_t = 0x0010, uint16_t = 0x0200);
     void print(Print& outDevice = Serial);
     void clear();
     int count();
+    uint16_t offset();
+    uint16_t size();
 
+    //These have to be public in order to be accessed by callback
+    static uint16_t _offset;
+    static uint16_t _size;
   private:
     // none
 };
 
-
-extern EspSaveCrash SaveCrash;
-
+//TODO: How to gracefully report to user with new static vars?
 // check if configuration of EEPROM layout will fit into EEPROM sector size
-#if SAVE_CRASH_EEPROM_OFFSET + SAVE_CRASH_SPACE_SIZE > SPI_FLASH_SEC_SIZE
-  #warning Check configuration of EEPROM layout!
-#endif
+//#if SAVE_CRASH_EEPROM_OFFSET + SAVE_CRASH_SPACE_SIZE > SPI_FLASH_SEC_SIZE
+//  #warning Check configuration of EEPROM layout!
+//#endif
 
 #endif //_ESPSAVECRASH_H_

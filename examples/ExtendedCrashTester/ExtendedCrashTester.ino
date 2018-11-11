@@ -28,6 +28,8 @@
 
 #include "EspSaveCrash.h"
 
+//Offset and size parameters can be passed to the constructor
+EspSaveCrash SaveCrash(0x0020, 0x0200);
 
 void setup(void)
 {

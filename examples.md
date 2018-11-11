@@ -35,6 +35,8 @@ To make your sketch capturing exceptions include [EspSaveCrash](https://github.c
 
 ```cpp
 #include "EspSaveCrash.h"
+
+EspSaveCrash SaveCrash;
 ```
 
 That's it.
@@ -170,18 +172,15 @@ Once module connects to the network, after opening provided IP in a web browser,
 
 ## Library Configuration
 
-Crash data are saved using the [EEPROM](https://github.com/esp8266/Arduino/blob/master/doc/libraries.md#eeprom) library that is provided together with [esp8266 / Arduino](https://github.com/esp8266/Arduino) core.
+Crash data is saved using the [EEPROM](https://github.com/esp8266/Arduino/blob/master/doc/libraries.md#eeprom) library that is provided together with [esp8266 / Arduino](https://github.com/esp8266/Arduino) core.
 
-If you like to change flash memory space reserved for storing crash information use define below. The maximum value is `4096` (`0x1000`) bytes as defined for the [EEPROM](https://github.com/esp8266/Arduino/blob/master/doc/libraries.md#eeprom) library.
+If you like to change flash memory space reserved for storing crash information use class constructor. The maximum value is `4096` (`0x1000`) bytes as defined for the [EEPROM](https://github.com/esp8266/Arduino/blob/master/doc/libraries.md#eeprom) library.
 
-```cpp
-#define SAVE_CRASH_SPACE_SIZE       0x0200  // space reserved to store crash data
-```
-
-You may have other applications already using EEPROM. With parameter `SAVE_CRASH_EEPROM_OFFSET` you can allocate initial EEPROM space for the other applications. Optionally use for this purpose upper EEPROM space (i.e. above `SAVE_CRASH_EEPROM_OFFSET` + `SAVE_CRASH_SPACE_SIZE`).
+You may have other applications already using EEPROM. Passing an offset parameter to the constructor leaves initial EEPROM space for the other applications. Optionally you can use upper EEPROM space (i.e. above `_offset` + `_size`).
 
 ```cpp
-#define SAVE_CRASH_EEPROM_OFFSET    0x0010  // adjust it to reserve space to store other data in EEPROM
+//Offset, Size
+EspSaveCrash SaveCrash(0x0010, 0x0200);
 ```
 
 Picture below shows relationship between both configuration parameters and total available EEPROM space.
