@@ -78,11 +78,13 @@
 #define SAVE_CRASH_STACK_TRACE      0x22  // variable
 
 
-class EspSaveCrash 
+class EspSaveCrash
 {
   public:
     EspSaveCrash(uint16_t = 0x0010, uint16_t = 0x0200);
     void print(Print& outDevice = Serial);
+    void crashToBuffer(char* userBuffer);
+
     void clear();
     int count();
     uint16_t offset();

@@ -30,8 +30,12 @@
 
 EspSaveCrash SaveCrash;
 
+char *_debugOutputBuffer;
+
 void setup(void)
 {
+  _debugOutputBuffer = (char *) calloc(2048, sizeof(char));
+
   Serial.begin(115200);
   Serial.println();
   Serial.println("SimpleCrash.ino");
@@ -42,6 +46,8 @@ void setup(void)
   Serial.println("0 : attempt to divide by zero");
   Serial.println("e : attempt to read through a pointer to no object");
   Serial.println("c : clear crash information");
+  Serial.println("p : print crash information");
+  Serial.println("b : store crash information to buffer and print buffer");
   Serial.println();
 }
 
@@ -72,6 +78,17 @@ void loop(void)
       case 'c':
         SaveCrash.clear();
         Serial.println("Crash information cleared");
+        break;
+      case 'p':
+        Serial.println("--- BEGIN of crash info ---");
+        SaveCrash.print();
+        Serial.println("--- END of crash info ---");
+        break;
+      case 'b':
+        SaveCrash.crashToBuffer(_debugOutputBuffer);
+        Serial.println("--- BEGIN of crash info from buffer ---");
+        Serial.println(_debugOutputBuffer);
+        Serial.println("--- END of crash info from buffer ---");
         break;
       default:
         Serial.printf("%c typed\n", inChar);

@@ -28,73 +28,105 @@
 
 #include "EspSaveCrash.h"
 #include <ESP8266WiFi.h>
+#include <ESP8266WiFiMulti.h>
+#include <WiFiClient.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
 
-EspSaveCrash SaveCrash;
-
+// WiFi ssid and password defined in wifiConfig.h
+// file is tracked with gitignore
+// #include "wifiConfig.h"
 const char* ssid = "********";
 const char* password = "********";
 
-WiFiServer server(80);
+EspSaveCrash SaveCrash;
 
+ESP8266WebServer server(80);
+
+// the buffer to put the Crash log to
+char *_debugOutputBuffer;
+
+// flag for setting up the server with WiFiMulti.addAP
+uint8_t performOnce = 0;
 
 void setup(void)
 {
+  // 2048 should be able to carry most of the debug stuff
+  _debugOutputBuffer = (char *) calloc(2048, sizeof(char));
+
   Serial.begin(115200);
   Serial.println("\nRemoteCrashCheck.ino");
 
   SaveCrash.print();
 
   Serial.printf("Connecting to %s ", ssid);
-  WiFi.persistent(false);
+
+  // WiFi.persistent(false);
+  WiFi.mode(WIFI_STA);
+
+  // remove if using WiFiMulti.addAP
   WiFi.begin(ssid, password);
+  // Wait for connection
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
     Serial.print(".");
   }
+  // end of remove
+
+  // non blocking WiFi login, will be added to onboard WiFi settings
+  // WiFiMulti.addAP(ssid, password);
+  // you have to wait until WiFi.status() == WL_CONNECTED
+  // before starting MDNS and the webserver
+
   Serial.println(" connected");
 
+  server.on("/", handleRoot);
+  server.on("/log", handleLog);
+  server.onNotFound(handleNotFound);
+
+  Serial.printf("HTTP server started, open %s in a web browser\n", WiFi.localIP().toString().c_str());
+
+  // remove if using WiFiMulti.addAP
   server.begin();
-  Serial.printf("Web server started, open %s in a web browser\n", WiFi.localIP().toString().c_str());
+  if (MDNS.begin("esp8266"))
+  {
+    Serial.println("MDNS responder started");
+  }
+  // end of remove
+
   Serial.println("\nPress a key + <enter>");
   Serial.println("0 : attempt to divide by zero");
   Serial.println("e : attempt to read through a pointer to no object");
   Serial.println("c : clear crash information");
+  Serial.println("p : print crash information");
+  Serial.println("b : store crash information to buffer and print buffer");
 }
 
 
 void loop(void)
 {
-  // read line by line what the client (web browser) is requesting
-  WiFiClient client = server.available();
-  if (client)
+  server.handleClient();
+  MDNS.update();
+
+  /*
+  // uncomment if using WiFiMulti.addAP
+  // if a WiFi connection is successfully established
+  if (WiFi.status() == WL_CONNECTED)
   {
-    Serial.println("\n[Client connected]");
-    while (client.connected())
+    if (performOnce == 0)
     {
-      // read line by line what the client (web browser) is requesting
-      if (client.available())
+      performOnce = 1;
+
+      server.begin();
+      if (MDNS.begin("esp8266"))
       {
-        String line = client.readStringUntil('\r');
-        // look for the end of client's request, that is marked with an empty line
-        if (line.length() == 1 && line[0] == '\n')
-        {
-          // send response header to the web browser
-          client.print("HTTP/1.1 200 OK\r\n");
-          client.print("Content-Type: text/plain\r\n");
-          client.print("Connection: close\r\n");
-          client.print("\r\n");
-          // send crash information to the web browser
-          SaveCrash.print(client);
-          break;
-        }
+        Serial.println("MDNS responder started");
       }
     }
-    delay(1); // give the web browser time to receive the data
-    // close the connection:
-    client.stop();
-    Serial.println("[Client disonnected]");
   }
+  // end of uncomment
+  */
 
   // read the keyboard
   if (Serial.available() > 0)
@@ -122,9 +154,54 @@ void loop(void)
         SaveCrash.clear();
         Serial.println("Crash information cleared");
         break;
+      case 'p':
+        Serial.println("--- BEGIN of crash info ---");
+        SaveCrash.print();
+        Serial.println("--- END of crash info ---");
+        break;
+      case 'b':
+        // "clear" the buffer before serving a request
+        strcpy(_debugOutputBuffer, "");
+        Serial.println("--- BEGIN of crash info ---");
+        SaveCrash.crashToBuffer(_debugOutputBuffer);
+        Serial.println(_debugOutputBuffer);
+        Serial.println("--- END of crash info ---");
+        break;
       default:
         Serial.printf("%c typed\n", inChar);
         break;
     }
   }
+}
+
+void handleRoot()
+{
+  server.send(200, "text/html", "<html><body>Hello from ESP<br><a href='/log'>Crash Log</a></body></html>");
+}
+
+void handleLog()
+{
+  // "clear" the buffer before serving a request
+  strcpy(_debugOutputBuffer, "");
+
+  SaveCrash.crashToBuffer(_debugOutputBuffer);
+
+  server.send(200, "text/plain", _debugOutputBuffer);
+}
+
+void handleNotFound()
+{
+  String message = "File Not Found\n\n";
+  message += "URI: ";
+  message += server.uri();
+  message += "\nMethod: ";
+  message += (server.method() == HTTP_GET) ? "GET" : "POST";
+  message += "\nArguments: ";
+  message += server.args();
+  message += "\n";
+  for (uint8_t i = 0; i < server.args(); i++)
+  {
+    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
+  }
+  server.send(404, "text/plain", message);
 }
