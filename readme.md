@@ -47,8 +47,8 @@ Check section [Quick Start](quick-start.md) for sample implementation of this li
 * Captures exceptions and software WDT restarts (not hardware WDT)
 * The following information is saved:
   * Time of crash using the ESP's milliseconds counter
-  * Reason of restart - see [rst cause](https://github.com/esp8266/Arduino/blob/master/doc/boards.md#rst-cause)
-  * Exception cause - see [EXCCAUSE](https://github.com/esp8266/Arduino/blob/master/doc/exception_causes.md#exception-causes-exccause)
+  * Reason of restart - see [rst cause](https://arduino-esp8266.readthedocs.io/en/latest/boards.html#rst-cause)
+  * Exception cause - see [EXCCAUSE](https://arduino-esp8266.readthedocs.io/en/latest/exception_causes.html)
   * `epc1`, `epc2`, `epc3`, `excvaddr` and `depc`
   * Stack trace in format you can analyze with [ESP Exception Decoder](https://github.com/me-no-dev/EspExceptionDecoder)
 * Automatically arms itself to operate after each restart or power up of module
