@@ -227,12 +227,10 @@ void EspSaveCrash::crashToBuffer(char* userBuffer)
   byte crashCounter = EEPROM.read(_offset + SAVE_CRASH_COUNTER);
   if (crashCounter == 0)
   {
-    // outputDev.println("No crashes saved");
     strcpy(userBuffer, "No crashes saved");
     return;
   }
 
-  // outputDev.println("Crash information recovered from EEPROM");
   strcat(userBuffer, "Crash information recovered from EEPROM\n");
 
   int16_t readFrom = _offset + SAVE_CRASH_DATA_SETS;
@@ -240,15 +238,12 @@ void EspSaveCrash::crashToBuffer(char* userBuffer)
   {
     uint32_t crashTime;
     EEPROM.get(readFrom + SAVE_CRASH_CRASH_TIME, crashTime);
-    // outputDev.printf("Crash # %d at %ld ms\n", k + 1, crashTime);
     sprintf(tmpBuffer, "Crash # %d at %ld ms\n", k + 1, crashTime);
     strcat(userBuffer, tmpBuffer);
 
-    // outputDev.printf("Restart reason: %d\n", EEPROM.read(readFrom + SAVE_CRASH_RESTART_REASON));
     sprintf(tmpBuffer, "Restart reason: %d\n", EEPROM.read(readFrom + SAVE_CRASH_RESTART_REASON));
     strcat(userBuffer, tmpBuffer);
 
-    // outputDev.printf("Exception cause: %d\n", EEPROM.read(readFrom + SAVE_CRASH_EXCEPTION_CAUSE));
     sprintf(tmpBuffer, "Exception cause: %d\n", EEPROM.read(readFrom + SAVE_CRASH_EXCEPTION_CAUSE));
     strcat(userBuffer, tmpBuffer);
 
@@ -258,14 +253,12 @@ void EspSaveCrash::crashToBuffer(char* userBuffer)
     EEPROM.get(readFrom + SAVE_CRASH_EPC3, epc3);
     EEPROM.get(readFrom + SAVE_CRASH_EXCVADDR, excvaddr);
     EEPROM.get(readFrom + SAVE_CRASH_DEPC, depc);
-    // outputDev.printf("epc1=0x%08x epc2=0x%08x epc3=0x%08x excvaddr=0x%08x depc=0x%08x\n", epc1, epc2, epc3, excvaddr, depc);
     sprintf(tmpBuffer, "epc1=0x%08x epc2=0x%08x epc3=0x%08x excvaddr=0x%08x depc=0x%08x\n", epc1, epc2, epc3, excvaddr, depc);
     strcat(userBuffer, tmpBuffer);
 
     uint32_t stackStart, stackEnd;
     EEPROM.get(readFrom + SAVE_CRASH_STACK_START, stackStart);
     EEPROM.get(readFrom + SAVE_CRASH_STACK_END, stackEnd);
-    // outputDev.println(">>>stack>>>");
     sprintf(tmpBuffer, ">>>stack>>>\n");
     strcat(userBuffer, tmpBuffer);
 
@@ -274,33 +267,28 @@ void EspSaveCrash::crashToBuffer(char* userBuffer)
     uint32_t stackTrace;
     for (int16_t i = 0; i < stackLength; i += 0x10)
     {
-      // outputDev.printf("%08x: ", stackStart + i);
       sprintf(tmpBuffer, "%08x: ", stackStart + i);
       strcat(userBuffer, tmpBuffer);
 
       for (byte j = 0; j < 4; j++)
       {
         EEPROM.get(currentAddress, stackTrace);
-        // outputDev.printf("%08x ", stackTrace);
         sprintf(tmpBuffer, "%08x ", stackTrace);
         strcat(userBuffer, tmpBuffer);
 
         currentAddress += 4;
         if (currentAddress - _offset > _size)
         {
-          // outputDev.println("\nIncomplete stack trace saved!");
           sprintf(tmpBuffer, "\nIncomplete stack trace saved!\n");
           strcat(userBuffer, tmpBuffer);
 
           goto eepromSpaceEnd;
         }
       }
-      // outputDev.println();
       strcat(userBuffer, "\n");
 
     }
     eepromSpaceEnd:
-    // outputDev.println("<<<stack<<<");
     strcat(userBuffer, "<<<stack<<<\n");
 
     readFrom = readFrom + SAVE_CRASH_STACK_TRACE + stackLength;
@@ -312,12 +300,10 @@ void EspSaveCrash::crashToBuffer(char* userBuffer)
   // is there free EEPROM space avialable to save data for next crash?
   if (writeFrom + SAVE_CRASH_STACK_TRACE > _size)
   {
-    // outputDev.println("No more EEPROM space available to save crash information!");
     strcat(userBuffer, "No more EEPROM space available to save crash information!\n");
   }
   else
   {
-    // outputDev.printf("EEPROM space available: 0x%04x bytes\n", _size - writeFrom);
     sprintf(tmpBuffer, "EEPROM space available: 0x%04x bytes\n", _size - writeFrom);
     strcat(userBuffer, tmpBuffer);
   }
