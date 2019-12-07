@@ -5,7 +5,7 @@
 
   Repository: https://github.com/krzychb/EspSaveCrash
   File: EspSaveCrash.h
-  Revision: 1.0.2
+  Revision: 1.1.0
   Date: 18-Aug-2016
   Author: krzychb at gazeta.pl
 

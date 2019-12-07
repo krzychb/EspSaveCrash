@@ -5,6 +5,7 @@ The following example Arduino sketches (*.ino) are available with this library:
   1. [SimpleCrash](https://github.com/krzychb/EspSaveCrash/blob/master/examples/SimpleCrash/SimpleCrash.ino) - trigger sample exceptions and show them on a serial monitor.
   2. [ExtendedCrashTester](https://github.com/krzychb/EspSaveCrash/blob/master/examples/ExtendedCrashTester/ExtendedCrashTester.ino) - extended version of SimpleCrash above. It allows triggering additional sample exceptions.
   3. [RemoteCrashCheck](https://github.com/krzychb/EspSaveCrash/blob/master/examples/RemoteCrashCheck/RemoteCrashCheck.ino) - check the list and details of saved exceptions remotely with web browser.
+  4. [WebServerCrashCheck](https://github.com/krzychb/EspSaveCrash/blob/master/examples/WebServerCrashCheck/WebServerCrashCheck.ino) - save crash data to user buffer to check it remotely with web browser using ESP8266WebServer. Contributed by [brainelectronics](http://www.brainelectronics.de/).
 
 To use examples below, first you need to [install](readme.md#installation) the [EspSaveCrash](https://github.com/krzychb/EspSaveCrash) library on your PC.
 

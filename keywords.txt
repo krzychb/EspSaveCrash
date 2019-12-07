@@ -14,3 +14,4 @@ SaveCrash	KEYWORD1
 
 print	KEYWORD2
 clear	KEYWORD2
+crashToBuffer   KEYWORD2

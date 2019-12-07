@@ -105,6 +105,8 @@ krzychb
 * Preparation of this library has been inspired by issue [#1152](https://github.com/esp8266/Arduino/issues/1152) in [esp8266 / Arduino](https://github.com/esp8266/Arduino) repository.
 * Development was possible thanks to [Ivan Grokhotkov](https://twitter.com/i_grr), who clarified how to register a crash callback and suggested to save crash information on flash. 
 * Actual implementation of library has been done thanks to [djoele](https://github.com/djoele) who provided first working code and suggested to convert it into general functionality.
+* Thanks to contribution by [Juan L. Pérez Díez](https://github.com/jlpdiez) the library accepts offset and size parameters passed into the constructor.
+* With kind contribution by [brainelectronics](http://www.brainelectronics.de/) the crash log can be stored to char buffer for more convenient use with a web server.
 
 
 ## License
