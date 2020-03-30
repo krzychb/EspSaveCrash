@@ -41,7 +41,7 @@ uint16_t EspSaveCrash::_size = 0x0200;
 /**
  * Save crash information in EEPROM
  * This function is called automatically if ESP8266 suffers an exception
- * It should be kept quick / consise to be able to execute before hardware wdt may kick in
+ * It should be kept quick / concise to be able to execute before hardware wdt may kick in
  */
 extern "C" void custom_crash_callback(struct rst_info * rst_info, uint32_t stack, uint32_t stack_end )
 {
@@ -60,7 +60,7 @@ extern "C" void custom_crash_callback(struct rst_info * rst_info, uint32_t stack
     EEPROM.get(EspSaveCrash::_offset + SAVE_CRASH_WRITE_FROM, writeFrom);
   }
 
-  // is there free EEPROM space avialable to save data for this crash?
+  // is there free EEPROM space available to save data for this crash?
   if (writeFrom + SAVE_CRASH_STACK_TRACE > EspSaveCrash::_size)
   {
     return;
@@ -137,7 +137,7 @@ void EspSaveCrash::clear(void)
 
 
 /**
- * Print out crash information that has been previusly saved in EEPROM
+ * Print out crash information that has been previously saved in EEPROM
  * @param outputDev Print&    Optional. Where to print: Serial, Serial, WiFiClient, etc.
  */
 void EspSaveCrash::print(Print& outputDev)
@@ -202,7 +202,7 @@ void EspSaveCrash::print(Print& outputDev)
   EEPROM.get(_offset + SAVE_CRASH_WRITE_FROM, writeFrom);
   EEPROM.end();
 
-  // is there free EEPROM space avialable to save data for next crash?
+  // is there free EEPROM space available to save data for next crash?
   if (writeFrom + SAVE_CRASH_STACK_TRACE > _size)
   {
     outputDev.println("No more EEPROM space available to save crash information!");
@@ -214,7 +214,7 @@ void EspSaveCrash::print(Print& outputDev)
 }
 
 /**
- * Write crash information that has been previusly saved in EEPROM to user buffer.
+ * Write crash information that has been previously saved in EEPROM to user buffer.
  * @param userBuffer User-owned buffer
  * @param size       Length of user-owned buffer
  * @return Number of characters written to the buffer
@@ -247,7 +247,7 @@ size_t EspSaveCrash::print(char* userBuffer, size_t size)
 }
 
 /**
- * @brief      DEPRECATED Set crash information that has been previusly saved in EEPROM to user buffer
+ * @brief      DEPRECATED Set crash information that has been previously saved in EEPROM to user buffer
  * @param      userBuffer  The user buffer
  */
 void EspSaveCrash::crashToBuffer(char* userBuffer)
