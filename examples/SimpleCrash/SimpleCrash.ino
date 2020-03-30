@@ -85,9 +85,9 @@ void loop(void)
         Serial.println("--- END of crash info ---");
         break;
       case 'b':
-        SaveCrash.crashToBuffer(_debugOutputBuffer);
+        SaveCrash.print(_debugOutputBuffer, 2048);
         Serial.println("--- BEGIN of crash info from buffer ---");
-        Serial.println(_debugOutputBuffer);
+        Serial.print(_debugOutputBuffer);
         Serial.println("--- END of crash info from buffer ---");
         break;
       default:

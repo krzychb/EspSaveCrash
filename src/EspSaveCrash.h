@@ -83,6 +83,9 @@ class EspSaveCrash
   public:
     EspSaveCrash(uint16_t = 0x0010, uint16_t = 0x0200);
     void print(Print& outDevice = Serial);
+    size_t print(char* userBuffer, size_t size);
+
+    // deprecated, for backwards-compatability only
     void crashToBuffer(char* userBuffer);
 
     void clear();
