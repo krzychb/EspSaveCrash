@@ -41,7 +41,7 @@ uint16_t EspSaveCrash::_size = 0x0200;
 /**
  * Save crash information in EEPROM
  * This function is called automatically if ESP8266 suffers an exception
- * It should be kept quick / consise to be able to execute before hardware wdt may kick in
+ * It should be kept quick / concise to be able to execute before hardware wdt may kick in
  */
 extern "C" void custom_crash_callback(struct rst_info * rst_info, uint32_t stack, uint32_t stack_end )
 {
@@ -60,7 +60,7 @@ extern "C" void custom_crash_callback(struct rst_info * rst_info, uint32_t stack
     EEPROM.get(EspSaveCrash::_offset + SAVE_CRASH_WRITE_FROM, writeFrom);
   }
 
-  // is there free EEPROM space avialable to save data for this crash?
+  // is there free EEPROM space available to save data for this crash?
   if (writeFrom + SAVE_CRASH_STACK_TRACE > EspSaveCrash::_size)
   {
     return;
@@ -137,7 +137,7 @@ void EspSaveCrash::clear(void)
 
 
 /**
- * Print out crash information that has been previusly saved in EEPROM
+ * Print out crash information that has been previously saved in EEPROM
  * @param outputDev Print&    Optional. Where to print: Serial, Serial, WiFiClient, etc.
  */
 void EspSaveCrash::print(Print& outputDev)
@@ -202,7 +202,7 @@ void EspSaveCrash::print(Print& outputDev)
   EEPROM.get(_offset + SAVE_CRASH_WRITE_FROM, writeFrom);
   EEPROM.end();
 
-  // is there free EEPROM space avialable to save data for next crash?
+  // is there free EEPROM space available to save data for next crash?
   if (writeFrom + SAVE_CRASH_STACK_TRACE > _size)
   {
     outputDev.println("No more EEPROM space available to save crash information!");
@@ -214,101 +214,45 @@ void EspSaveCrash::print(Print& outputDev)
 }
 
 /**
- * @brief      Set crash information that has been previusly saved in EEPROM to user buffer
+ * Write crash information that has been previously saved in EEPROM to user buffer.
+ * @param userBuffer User-owned buffer
+ * @param size       Length of user-owned buffer
+ * @return Number of characters written to the buffer
+ */
+size_t EspSaveCrash::print(char* userBuffer, size_t size)
+{
+  struct BufferPrinter : Print {
+    BufferPrinter(char* buffer, size_t size) : _buffer{buffer}, _bufferSize{size} {}
+
+    size_t write(uint8_t ch) override {
+      return write(&ch, 1);
+    }
+
+    size_t write(const uint8_t *buffer, size_t size) override {
+      size_t writeSize = _pos + size <= _bufferSize ? size : _bufferSize - _pos;
+      memcpy(_buffer + _pos, buffer, writeSize);
+      _pos += writeSize;
+      return writeSize;
+    }
+
+    char *_buffer;
+    size_t _bufferSize;
+    size_t _pos{0};
+  };
+
+  BufferPrinter printer(userBuffer, size);
+  print(printer);
+  printer.write('\0');
+  return printer._pos;
+}
+
+/**
+ * @brief      DEPRECATED Set crash information that has been previously saved in EEPROM to user buffer
  * @param      userBuffer  The user buffer
  */
 void EspSaveCrash::crashToBuffer(char* userBuffer)
 {
-  char *tmpBuffer = (char*)calloc(2048, sizeof(char));
-
-  // Note that 'EEPROM.begin' method is reserving a RAM buffer
-  // The buffer size is SAVE_CRASH_EEPROM_OFFSET + SAVE_CRASH_SPACE_SIZE
-  EEPROM.begin(_offset + _size);
-  byte crashCounter = EEPROM.read(_offset + SAVE_CRASH_COUNTER);
-  if (crashCounter == 0)
-  {
-    strcpy(userBuffer, "No crashes saved");
-    return;
-  }
-
-  strcat(userBuffer, "Crash information recovered from EEPROM\n");
-
-  int16_t readFrom = _offset + SAVE_CRASH_DATA_SETS;
-  for (byte k = 0; k < crashCounter; k++)
-  {
-    uint32_t crashTime;
-    EEPROM.get(readFrom + SAVE_CRASH_CRASH_TIME, crashTime);
-    sprintf(tmpBuffer, "Crash # %d at %ld ms\n", k + 1, crashTime);
-    strcat(userBuffer, tmpBuffer);
-
-    sprintf(tmpBuffer, "Restart reason: %d\n", EEPROM.read(readFrom + SAVE_CRASH_RESTART_REASON));
-    strcat(userBuffer, tmpBuffer);
-
-    sprintf(tmpBuffer, "Exception cause: %d\n", EEPROM.read(readFrom + SAVE_CRASH_EXCEPTION_CAUSE));
-    strcat(userBuffer, tmpBuffer);
-
-    uint32_t epc1, epc2, epc3, excvaddr, depc;
-    EEPROM.get(readFrom + SAVE_CRASH_EPC1, epc1);
-    EEPROM.get(readFrom + SAVE_CRASH_EPC2, epc2);
-    EEPROM.get(readFrom + SAVE_CRASH_EPC3, epc3);
-    EEPROM.get(readFrom + SAVE_CRASH_EXCVADDR, excvaddr);
-    EEPROM.get(readFrom + SAVE_CRASH_DEPC, depc);
-    sprintf(tmpBuffer, "epc1=0x%08x epc2=0x%08x epc3=0x%08x excvaddr=0x%08x depc=0x%08x\n", epc1, epc2, epc3, excvaddr, depc);
-    strcat(userBuffer, tmpBuffer);
-
-    uint32_t stackStart, stackEnd;
-    EEPROM.get(readFrom + SAVE_CRASH_STACK_START, stackStart);
-    EEPROM.get(readFrom + SAVE_CRASH_STACK_END, stackEnd);
-    sprintf(tmpBuffer, ">>>stack>>>\n");
-    strcat(userBuffer, tmpBuffer);
-
-    int16_t currentAddress = readFrom + SAVE_CRASH_STACK_TRACE;
-    int16_t stackLength = stackEnd - stackStart;
-    uint32_t stackTrace;
-    for (int16_t i = 0; i < stackLength; i += 0x10)
-    {
-      sprintf(tmpBuffer, "%08x: ", stackStart + i);
-      strcat(userBuffer, tmpBuffer);
-
-      for (byte j = 0; j < 4; j++)
-      {
-        EEPROM.get(currentAddress, stackTrace);
-        sprintf(tmpBuffer, "%08x ", stackTrace);
-        strcat(userBuffer, tmpBuffer);
-
-        currentAddress += 4;
-        if (currentAddress - _offset > _size)
-        {
-          sprintf(tmpBuffer, "\nIncomplete stack trace saved!\n");
-          strcat(userBuffer, tmpBuffer);
-
-          goto eepromSpaceEnd;
-        }
-      }
-      strcat(userBuffer, "\n");
-
-    }
-    eepromSpaceEnd:
-    strcat(userBuffer, "<<<stack<<<\n");
-
-    readFrom = readFrom + SAVE_CRASH_STACK_TRACE + stackLength;
-  }
-  int16_t writeFrom;
-  EEPROM.get(_offset + SAVE_CRASH_WRITE_FROM, writeFrom);
-  EEPROM.end();
-
-  // is there free EEPROM space avialable to save data for next crash?
-  if (writeFrom + SAVE_CRASH_STACK_TRACE > _size)
-  {
-    strcat(userBuffer, "No more EEPROM space available to save crash information!\n");
-  }
-  else
-  {
-    sprintf(tmpBuffer, "EEPROM space available: 0x%04x bytes\n", _size - writeFrom);
-    strcat(userBuffer, tmpBuffer);
-  }
-
-  free(tmpBuffer);
+  print(userBuffer, SIZE_MAX);
 }
 
 /**

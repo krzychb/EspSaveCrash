@@ -37,14 +37,14 @@
  * Layout of crash data saved to EEPROM (flash)
  *
  * 1. Crash counter / how many crashes are saved
- * 2. Next avialable space in EEPROM to write data
+ * 2. Next available space in EEPROM to write data
  * 3. Crash Data Set 1
  * 4. Crash Data Set 2
  * 5. ...
  */
 #define SAVE_CRASH_COUNTER          0x00  // 1 byte
 #define SAVE_CRASH_WRITE_FROM       0x01  // 2 bytes
-#define SAVE_CRASH_DATA_SETS        0x03  // begining of crash data sets
+#define SAVE_CRASH_DATA_SETS        0x03  // beginning of crash data sets
 // Crash Data Set 1                       // variable length
 // Crash Data Set 2                       // variable length
 // ...                                    // variable length
@@ -60,8 +60,8 @@
  *  6. epc3
  *  7. excvaddr
  *  8. depc
- *  9. adress of stack start
- * 10. adress of stack end
+ *  9. address of stack start
+ * 10. address of stack end
  * 11. stack trace bytes
  *     ...
  */
@@ -83,6 +83,9 @@ class EspSaveCrash
   public:
     EspSaveCrash(uint16_t = 0x0010, uint16_t = 0x0200);
     void print(Print& outDevice = Serial);
+    size_t print(char* userBuffer, size_t size);
+
+    // deprecated, for backwards-compatibility only
     void crashToBuffer(char* userBuffer);
 
     void clear();
