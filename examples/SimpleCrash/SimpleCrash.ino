@@ -5,8 +5,8 @@
 
   Repository: https://github.com/krzychb/EspSaveCrash
   File: SimpleCrash.ino
-  Revision: 1.0.2
-  Date: 19-Aug-2016
+  Revision: 1.0.3
+  Date: 4-Apr-2020
   Author: krzychb at gazeta.pl
 
   Copyright (c) 2016 Krzysztof Budzynski. All rights reserved.
@@ -31,10 +31,11 @@
 EspSaveCrash SaveCrash;
 
 char *_debugOutputBuffer;
+#define DEBUG_OUTPUT_SIZE 2048
 
 void setup(void)
 {
-  _debugOutputBuffer = (char *) calloc(2048, sizeof(char));
+  _debugOutputBuffer = (char *) calloc(DEBUG_OUTPUT_SIZE, sizeof(char));
 
   Serial.begin(115200);
   Serial.println();
@@ -85,10 +86,14 @@ void loop(void)
         Serial.println("--- END of crash info ---");
         break;
       case 'b':
-        SaveCrash.print(_debugOutputBuffer, 2048);
+        SaveCrash.print(_debugOutputBuffer, DEBUG_OUTPUT_SIZE);
         Serial.println("--- BEGIN of crash info from buffer ---");
         Serial.print(_debugOutputBuffer);
         Serial.println("--- END of crash info from buffer ---");
+        break;
+      case 0xa:
+      case 0xd:
+        // skip newline and carriage return
         break;
       default:
         Serial.printf("%c typed\n", inChar);
@@ -96,4 +101,3 @@ void loop(void)
     }
   }
 }
-
