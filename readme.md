@@ -70,13 +70,13 @@ Please check separate section [how to use example sketches](examples.md) and wha
 
 ### Arduino Core
 
-* [Esp8266 / Arduino](https://github.com/esp8266/Arduino) core [2.3.0](https://github.com/esp8266/Arduino/releases/tag/2.3.0) for Arduino IDE and Visual Micro
+* [Esp8266 / Arduino](https://github.com/esp8266/Arduino) core [2.6.1](https://github.com/esp8266/Arduino/releases/tag/2.6.1) for Arduino IDE and Visual Micro
 * [framework-arduinoespressif](http://platformio.org/platforms/espressif) version 13 for PlatformIO
 
 
 ### Programming Environment
 
-* [Arduino IDE](https://www.arduino.cc/en/Main/Software) 1.6.9 portable version running on Windows 7 x64
+* [Arduino IDE](https://www.arduino.cc/en/Main/Software) 1.8.10 portable version running on Windows 7 x64 and Linux Ubuntu 18.04 LTE
 * [PlatformIO IDE](http://platformio.org/platformio-ide) 1.3.0 CLI 2.11.0 running on Windows 7 x64
 * [Visual Micro](http://www.visualmicro.com/) 1606.17.10 with Visual Studio Community 2015 running on Windows 7 x64
 
@@ -107,6 +107,7 @@ krzychb
 * Actual implementation of library has been done thanks to [djoele](https://github.com/djoele) who provided first working code and suggested to convert it into general functionality.
 * Thanks to contribution by [Juan L. Pérez Díez](https://github.com/jlpdiez) the library accepts offset and size parameters passed into the constructor.
 * With kind contribution by [brainelectronics](http://www.brainelectronics.de/) the crash log can be stored to char buffer for more convenient use with a web server.
+* [Oxan van Leeuwen](https://github.com/oxan) brought nice code improvements, intoduced size buffer check to prevent the buffer overflow and fixed some spelling errors.
 
 
 ## License

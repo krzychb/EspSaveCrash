@@ -5,8 +5,8 @@
 
   Repository: https://github.com/krzychb/EspSaveCrash
   File: ExtendedCrashTester.ino
-  Revision: 1.0.1
-  Date: 16-Aug-2016
+  Revision: 1.0.2
+  Date: 4-Apr-2020
   Author: krzychb at gazeta.pl
 
   Copyright (c) 2016 Krzysztof Budzynski. All rights reserved.
@@ -118,6 +118,10 @@ void loop(void)
         Serial.println("0 : 'division by zero' exeption");
         Serial.println("e : 'read through a pointer to no object' exeption");
         Serial.println("x : 'write through a pointer to no object' exeption");
+        break;
+      case 0xa:
+      case 0xd:
+        // skip newline and carriage return
         break;
       default:
         Serial.printf("Case? (%c) / ? - help\n", inChar);
