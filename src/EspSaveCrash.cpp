@@ -5,8 +5,8 @@
 
   Repository: https://github.com/krzychb/EspSaveCrash
   File: EspSaveCrash.cpp
-  Revision: 1.1.0
-  Date: 18-Aug-2016
+  Revision: 1.2.1
+  Date: 25-Apr-2020
   Author: krzychb at gazeta.pl
 
   Copyright (c) 2016 Krzysztof Budzynski. All rights reserved.
@@ -158,7 +158,7 @@ void EspSaveCrash::print(Print& outputDev)
   {
     uint32_t crashTime;
     EEPROM.get(readFrom + SAVE_CRASH_CRASH_TIME, crashTime);
-    outputDev.printf("Crash # %d at %ld ms\n", k + 1, crashTime);
+    outputDev.printf("Crash # %d at %ld ms\n", k + 1, (long) crashTime);
 
     outputDev.printf("Restart reason: %d\n", EEPROM.read(readFrom + SAVE_CRASH_RESTART_REASON));
     outputDev.printf("Exception cause: %d\n", EEPROM.read(readFrom + SAVE_CRASH_EXCEPTION_CAUSE));

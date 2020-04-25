@@ -1,4 +1,5 @@
 _input
 Thumbs.db
+.DS_Store
 
 wifiConfig.h
