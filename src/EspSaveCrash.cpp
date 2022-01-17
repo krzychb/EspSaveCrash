@@ -115,7 +115,7 @@ extern "C" void custom_crash_callback(struct rst_info * rst_info, uint32_t stack
 /**
  * The class constructor
  */
-EspSaveCrash::EspSaveCrash(uint16_t off, uint16_t size, bool persistEEPROM = false)
+EspSaveCrash::EspSaveCrash(uint16_t off, uint16_t size, bool persistEEPROM)
 {
   _offset = off;
   _size = size;
