@@ -177,11 +177,16 @@ Crash data is saved using the [EEPROM](https://github.com/esp8266/Arduino/blob/m
 
 If you like to change flash memory space reserved for storing crash information use class constructor. The maximum value is `4096` (`0x1000`) bytes as defined for the [EEPROM](https://github.com/esp8266/Arduino/blob/master/doc/libraries.md#eeprom) library.
 
-You may have other applications already using EEPROM. Passing an offset parameter to the constructor leaves initial EEPROM space for the other applications. Optionally you can use upper EEPROM space (i.e. above `_offset` + `_size`).
+You may have other applications already using EEPROM in which case you must set a third parameter (shown below) in the constructor to set EEPROM to persistent, otherwise the libary will assume EEPROM is not being used by your application and performs EEPROM.end(). Passing an offset parameter to the constructor leaves initial EEPROM space for the other applications. Optionally you can use upper EEPROM space (i.e. above `_offset` + `_size`).
 
 ```cpp
 //Offset, Size
 EspSaveCrash SaveCrash(0x0010, 0x0200);
+```
+
+```cpp
+//Offset, Size, Persistent EEPROM
+EspSaveCrash SaveCrash(0x0010, 0x0200, true);
 ```
 
 Picture below shows relationship between both configuration parameters and total available EEPROM space.
