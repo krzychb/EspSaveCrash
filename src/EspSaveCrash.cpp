@@ -134,8 +134,12 @@ void EspSaveCrash::clear(void)
   EEPROM.begin(_offset + _size);
   // clear the crash counter
   EEPROM.write(_offset + SAVE_CRASH_COUNTER, 0);
-  if(!_persistEEPROM) EEPROM.end();
-  else EEPROM.commit();
+  if(!_persistEEPROM){
+    EEPROM.end();
+  }
+  else{
+    EEPROM.commit();
+  }
 }
 
 
@@ -203,8 +207,12 @@ void EspSaveCrash::print(Print& outputDev)
   }
   int16_t writeFrom;
   EEPROM.get(_offset + SAVE_CRASH_WRITE_FROM, writeFrom);
-  if(!_persistEEPROM) EEPROM.end();
-  else EEPROM.commit();
+  if(!_persistEEPROM){
+    EEPROM.end();
+  }
+  else{
+    EEPROM.commit();
+  }
 
   // is there free EEPROM space available to save data for next crash?
   if (writeFrom + SAVE_CRASH_STACK_TRACE > _size)
@@ -266,8 +274,12 @@ int EspSaveCrash::count()
 {
   EEPROM.begin(_offset + _size);
   int crashCounter = EEPROM.read(_offset + SAVE_CRASH_COUNTER);
-  if(!_persistEEPROM) EEPROM.end();
-  else EEPROM.commit();
+  if(!_persistEEPROM){
+    EEPROM.end();
+  }
+  else{
+    EEPROM.commit();
+  }
   return crashCounter;
 }
 
