@@ -37,6 +37,7 @@
  */
 uint16_t EspSaveCrash::_offset = 0x0010;
 uint16_t EspSaveCrash::_size = 0x0200;
+bool EspSaveCrash::_persistEEPROM = false;
 
 /**
  * Save crash information in EEPROM
@@ -114,10 +115,11 @@ extern "C" void custom_crash_callback(struct rst_info * rst_info, uint32_t stack
 /**
  * The class constructor
  */
-EspSaveCrash::EspSaveCrash(uint16_t off, uint16_t size)
+EspSaveCrash::EspSaveCrash(uint16_t off, uint16_t size, bool persistEEPROM)
 {
   _offset = off;
   _size = size;
+  _persistEEPROM = persistEEPROM;
 }
 
 /**
@@ -132,7 +134,12 @@ void EspSaveCrash::clear(void)
   EEPROM.begin(_offset + _size);
   // clear the crash counter
   EEPROM.write(_offset + SAVE_CRASH_COUNTER, 0);
-  EEPROM.end();
+  if(!_persistEEPROM){
+    EEPROM.end();
+  }
+  else{
+    EEPROM.commit();
+  }
 }
 
 
@@ -200,7 +207,12 @@ void EspSaveCrash::print(Print& outputDev)
   }
   int16_t writeFrom;
   EEPROM.get(_offset + SAVE_CRASH_WRITE_FROM, writeFrom);
-  EEPROM.end();
+  if(!_persistEEPROM){
+    EEPROM.end();
+  }
+  else{
+    EEPROM.commit();
+  }
 
   // is there free EEPROM space available to save data for next crash?
   if (writeFrom + SAVE_CRASH_STACK_TRACE > _size)
@@ -262,7 +274,12 @@ int EspSaveCrash::count()
 {
   EEPROM.begin(_offset + _size);
   int crashCounter = EEPROM.read(_offset + SAVE_CRASH_COUNTER);
-  EEPROM.end();
+  if(!_persistEEPROM){
+    EEPROM.end();
+  }
+  else{
+    EEPROM.commit();
+  }
   return crashCounter;
 }
 

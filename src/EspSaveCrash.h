@@ -81,7 +81,7 @@
 class EspSaveCrash
 {
   public:
-    EspSaveCrash(uint16_t = 0x0010, uint16_t = 0x0200);
+    EspSaveCrash(uint16_t = 0x0010, uint16_t = 0x0200, bool = false);
     void print(Print& outDevice = Serial);
     size_t print(char* userBuffer, size_t size);
 
@@ -96,6 +96,7 @@ class EspSaveCrash
     //These have to be public in order to be accessed by callback
     static uint16_t _offset;
     static uint16_t _size;
+    static bool _persistEEPROM;
   private:
     // none
 };
