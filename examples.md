@@ -1,6 +1,6 @@
 ## Examples
 
-The following example Arduino sketches (*.ino) are available with this library:
+The following example Arduino sketches (`*.ino`) are available with this library:
 
   1. [SimpleCrash](https://github.com/krzychb/EspSaveCrash/blob/master/examples/SimpleCrash/SimpleCrash.ino) - trigger sample exceptions and show them on a serial monitor.
   2. [ExtendedCrashTester](https://github.com/krzychb/EspSaveCrash/blob/master/examples/ExtendedCrashTester/ExtendedCrashTester.ino) - extended version of SimpleCrash above. It allows triggering additional sample exceptions.
@@ -173,7 +173,7 @@ Once module connects to the network, after opening provided IP in a web browser,
 
 ## Library Configuration
 
-Crash data is saved using the [EEPROM](https://github.com/esp8266/Arduino/blob/master/doc/libraries.md#eeprom) library that is provided together with [esp8266 / Arduino](https://github.com/esp8266/Arduino) core.
+Crash data is saved using the [EEPROM](https://arduino-esp8266.readthedocs.io/en/latest/libraries.html#eeprom) library that is provided together with [esp8266 / Arduino](https://github.com/esp8266/Arduino) core.
 
 If you like to change flash memory space reserved for storing crash information use class constructor. The maximum value is `4096` (`0x1000`) bytes as defined for the [EEPROM](https://github.com/esp8266/Arduino/blob/master/doc/libraries.md#eeprom) library.
 

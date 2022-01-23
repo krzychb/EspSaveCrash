@@ -108,7 +108,7 @@ krzychb
 * Thanks to contribution by [Juan L. Pérez Díez](https://github.com/jlpdiez) the library accepts offset and size parameters passed into the constructor.
 * With kind contribution by [brainelectronics](http://www.brainelectronics.de/) the crash log can be stored to char buffer for more convenient use with a web server.
 * [Oxan van Leeuwen](https://github.com/oxan) brought nice code improvements, intoduced size buffer check to prevent the buffer overflow and fixed some spelling errors.
-
+* Thanks to [Byron Johnson](https://github.com/bwjohns4) the library now allows users who are already using EEPROM to continue in an intuitive way and not have this library close the EEPROM.
 
 ## License
 
