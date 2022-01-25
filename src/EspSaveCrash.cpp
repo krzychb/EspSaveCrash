@@ -5,8 +5,8 @@
 
   Repository: https://github.com/krzychb/EspSaveCrash
   File: EspSaveCrash.cpp
-  Revision: 1.2.1
-  Date: 25-Apr-2020
+  Revision: 1.3.0
+  Date: 23-Jan-2022
   Author: krzychb at gazeta.pl
 
   Copyright (c) 2016 Krzysztof Budzynski. All rights reserved.
