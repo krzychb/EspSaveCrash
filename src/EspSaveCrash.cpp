@@ -37,7 +37,7 @@
  */
 uint16_t EspSaveCrash::_offset = 0x0010;
 uint16_t EspSaveCrash::_size = 0x0200;
-bool EspSaveCrash::_persistEEPROM = false;
+uint16_t EspSaveCrash::_EEPROM_size = 0;
 
 /**
  * Save crash information in EEPROM
@@ -48,7 +48,9 @@ extern "C" void custom_crash_callback(struct rst_info * rst_info, uint32_t stack
 {
   // Note that 'EEPROM.begin' method is reserving a RAM buffer
   // The buffer size is SAVE_CRASH_EEPROM_OFFSET + SAVE_CRASH_SPACE_SIZE
-  EEPROM.begin(EspSaveCrash::_offset + EspSaveCrash::_size);
+  if(EEPROM.length() == 0){
+    EEPROM.begin(EspSaveCrash::_EEPROM_size);
+  }
 
   byte crashCounter = EEPROM.read(EspSaveCrash::_offset + SAVE_CRASH_COUNTER);
   int16_t writeFrom;
@@ -115,11 +117,11 @@ extern "C" void custom_crash_callback(struct rst_info * rst_info, uint32_t stack
 /**
  * The class constructor
  */
-EspSaveCrash::EspSaveCrash(uint16_t off, uint16_t size, bool persistEEPROM)
+EspSaveCrash::EspSaveCrash(uint16_t off, uint16_t size, uint16_t EEPROM_size)
 {
   _offset = off;
   _size = size;
-  _persistEEPROM = persistEEPROM;
+  _EEPROM_size = EEPROM_size == 0 ? (_offset + _size) : EEPROM_size;
 }
 
 /**
@@ -131,10 +133,12 @@ void EspSaveCrash::clear(void)
 {
   // Note that 'EEPROM.begin' method is reserving a RAM buffer
   // The buffer size is SAVE_CRASH_EEPROM_OFFSET + SAVE_CRASH_SPACE_SIZE
-  EEPROM.begin(_offset + _size);
+  if(EEPROM.length() == 0){
+    EEPROM.begin(_EEPROM_size);
+  }
   // clear the crash counter
   EEPROM.write(_offset + SAVE_CRASH_COUNTER, 0);
-  if(!_persistEEPROM){
+  if(!_EEPROM_size){
     EEPROM.end();
   }
   else{
@@ -151,7 +155,9 @@ void EspSaveCrash::print(Print& outputDev)
 {
   // Note that 'EEPROM.begin' method is reserving a RAM buffer
   // The buffer size is SAVE_CRASH_EEPROM_OFFSET + SAVE_CRASH_SPACE_SIZE
-  EEPROM.begin(_offset + _size);
+  if(EEPROM.length() == 0){
+    EEPROM.begin(_EEPROM_size);
+  }
   byte crashCounter = EEPROM.read(_offset + SAVE_CRASH_COUNTER);
   if (crashCounter == 0)
   {
@@ -207,7 +213,7 @@ void EspSaveCrash::print(Print& outputDev)
   }
   int16_t writeFrom;
   EEPROM.get(_offset + SAVE_CRASH_WRITE_FROM, writeFrom);
-  if(!_persistEEPROM){
+  if(!_EEPROM_size){
     EEPROM.end();
   }
   else{
@@ -272,9 +278,11 @@ void EspSaveCrash::crashToBuffer(char* userBuffer)
  */
 int EspSaveCrash::count()
 {
-  EEPROM.begin(_offset + _size);
+  if(EEPROM.length() == 0){
+    EEPROM.begin(_EEPROM_size);
+  }
   int crashCounter = EEPROM.read(_offset + SAVE_CRASH_COUNTER);
-  if(!_persistEEPROM){
+  if(!_EEPROM_size){
     EEPROM.end();
   }
   else{

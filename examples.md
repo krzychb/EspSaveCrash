@@ -186,7 +186,7 @@ EspSaveCrash SaveCrash(0x0010, 0x0200);
 
 ```cpp
 //Offset, Size, Persistent EEPROM
-EspSaveCrash SaveCrash(0x0010, 0x0200, true);
+EspSaveCrash SaveCrash(0x0010, 0x0200, YOUR_APP_EEPROM_SIZE);
 ```
 
 Picture below shows relationship between both configuration parameters and total available EEPROM space.
